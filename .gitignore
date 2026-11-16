@@ -1,0 +1,13 @@
+# Machine-specific and generated files
+local.properties
+.gradle/
+build/
+app/build/
+.idea/
+*.iml
+*.apk
+*.keystore
+*.jks
+
+# Personal notes (kept on the PC only)
+docs/

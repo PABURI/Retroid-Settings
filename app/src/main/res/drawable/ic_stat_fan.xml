@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Status-bar icon: white fan blades (tinted by the system). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M54,50c-2,-14 4,-26 14,-26c8,0 10,10 2,16c-5,4 -11,7 -16,10zM58,54c14,-2 26,4 26,14c0,8 -10,10 -16,2c-4,-5 -7,-11 -10,-16zM54,58c2,14 -4,26 -14,26c-8,0 -10,-10 -2,-16c5,-4 11,-7 16,-10zM50,54c-14,2 -26,-4 -26,-14c0,-8 10,-10 16,-2c4,5 7,11 10,16zM54,48a6,6 0,1 1,0 12a6,6 0,1 1,0 -12z" />
+</vector>
