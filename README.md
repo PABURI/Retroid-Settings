@@ -124,6 +124,11 @@ The APK is written to `app/build/outputs/apk/release/app-release.apk`.
 | compileSdk / targetSdk / minSdk | 35 / 35 / 30 |
 | UI | Jetpack Compose (Material 3 components) |
 
+## Disclaimer
+
+This app is provided "as is", without warranty of any kind. It uses root access to change fan control, CPU/GPU clocks and system settings.
+Use it at your own risk: the author is not responsible for any damage, data loss or other problems that result from using it.
+
 ## License and third-party software
 
 Libraries used and their licenses are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
@@ -258,6 +263,11 @@ JDK 17과 Android SDK(Build-Tools 35)가 필요해요.
 | Kotlin | 2.1.21 |
 | compileSdk / targetSdk / minSdk | 35 / 35 / 30 |
 | UI | Jetpack Compose (Material 3 components) |
+
+## 면책 조항
+
+이 앱은 있는 그대로 제공되며, 어떤 보증도 하지 않아요. root 권한으로 팬 제어, CPU/GPU 클럭, 시스템 설정을 바꿔요.<br>
+사용에 따른 책임은 사용자에게 있어요. 기기 손상, 데이터 손실 등 이 앱을 사용해서 생기는 어떤 문제에도 작성자는 책임지지 않아요.
 
 ## 라이선스와 서드파티
 
