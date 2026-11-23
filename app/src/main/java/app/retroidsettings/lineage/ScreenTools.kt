@@ -21,7 +21,7 @@ object ScreenTools {
     /** Re-applies everything without restarting the selected apps (used after boot). */
     fun applyAll(ctx: Context, prefs: Prefs): Boolean {
         var ok = true
-        if (prefs.lockLandscape) ok = lockLandscape(ctx, true) && ok
+        ok = setRotation(ctx, prefs.rotationMode) && ok
         if (prefs.fullscreenOption) ok = enableFullscreenOption(ctx) && ok
         if (prefs.lockDateTop) ok = lockScreenDate(ctx, true) && ok
         ok = applyDensityPref(ctx, prefs) && ok
@@ -30,13 +30,30 @@ object ScreenTools {
         return ok
     }
 
-    fun lockLandscape(ctx: Context, on: Boolean): Boolean {
-        val cmd = if (on)
-            "wm user-rotation lock 0; wm fixed-to-user-rotation enabled; wm set-ignore-orientation-request true; settings put system accelerometer_rotation 0"
-        else
-            "wm fixed-to-user-rotation default; wm set-ignore-orientation-request false; wm user-rotation free"
-        return RootShell.exec(ctx, cmd) != null
+    fun setRotation(ctx: Context, mode: Int): Boolean = RootShell.exec(ctx, rotationCommand(mode)) != null
+
+    /** The system's own auto-rotate. */
+    const val ROT_AUTO = -1
+    /** Auto-rotate done by [RotationService], for when the system's auto-rotate is 90° off. */
+    const val ROT_AUTO_FIX = -2
+    const val ROT_LANDSCAPE = 0
+    const val ROT_PORTRAIT = 1
+    const val ROT_PORTRAIT_REV = 3
+
+    /**
+     * Root command for a rotation mode: ROT_AUTO hands rotation to the system, ROT_AUTO_FIX starts
+     * [RotationService], and the others fix that rotation (apps' rotation requests ignored).
+     */
+    fun rotationCommand(mode: Int): String {
+        val stop = "am stopservice -n $ROT_SERVICE"
+        val fixed = "wm fixed-to-user-rotation enabled; wm set-ignore-orientation-request true; settings put system accelerometer_rotation 0"
+        return when (mode) {
+            ROT_AUTO -> "$stop; wm fixed-to-user-rotation default; wm set-ignore-orientation-request false; wm user-rotation free; settings put system accelerometer_rotation 1"
+            ROT_AUTO_FIX -> "$fixed; am start-foreground-service -n $ROT_SERVICE"
+            else -> "$stop; $fixed; wm user-rotation lock $mode"
+        }
     }
+    private const val ROT_SERVICE = "app.retroidsettings.lineage/.RotationService"
 
     /** Makes the hidden "Full screen" choice appear in Settings > Apps > Aspect ratio (resets on reboot). */
     fun enableFullscreenOption(ctx: Context): Boolean {
@@ -117,7 +134,7 @@ object ScreenTools {
             "G=/sys/class/kgsl/kgsl-3d0; m=0; for f in ${'$'}(cat ${'$'}G/gpu_available_frequencies); do [ ${'$'}f -gt ${'$'}m ] && m=${'$'}f; done; [ ${'$'}m -gt 0 ] && { echo ${'$'}m > ${'$'}G/max_gpuclk; echo ${'$'}m > ${'$'}G/devfreq/max_freq; }",
             "sh ${Daemon.tools(ctx)} stock_led",
             "v=${'$'}(sh ${Daemon.tools(ctx)} calib_stock); [ -n \"${'$'}v\" ] && echo ${'$'}v > /sys/class/moorechip-joystick/joystick/calibration",
-            "wm fixed-to-user-rotation default; wm set-ignore-orientation-request false; wm user-rotation free",
+            "am stopservice -n $ROT_SERVICE; wm fixed-to-user-rotation default; wm set-ignore-orientation-request false; wm user-rotation free",
             "cmd overlay disable com.android.shell:RP6AspectSettings; cmd overlay disable com.android.shell:RP6AspectFullscreen",
             "device_config delete window_manager enable_app_compat_aspect_ratio_user_settings; device_config delete window_manager enable_app_compat_user_aspect_ratio_fullscreen; wm reset-letterbox-style",
             "for a in ${apps.joinToString(" ")}; do am compat reset-all --no-kill ${'$'}a; done",

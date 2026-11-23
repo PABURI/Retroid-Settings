@@ -31,6 +31,10 @@ class App : Application() {
         nm.createNotificationChannel(
             NotificationChannel(CH_QUIET, "Boot setup", NotificationManager.IMPORTANCE_MIN)
         )
+        // Required while the auto-rotate service runs; kept out of sight.
+        nm.createNotificationChannel(
+            NotificationChannel(CH_ROTATION, "Auto-rotate", NotificationManager.IMPORTANCE_MIN)
+        )
     }
 
     companion object {
@@ -39,6 +43,7 @@ class App : Application() {
         const val CH_QUIET = "quiet"
         const val CH_SERVICE = "service"
         const val CH_PAIR = "pair"
+        const val CH_ROTATION = "rotation"
     }
 }
 

@@ -401,7 +401,7 @@ private fun FullscreenCard(prefs: Prefs) {
     val ctx = LocalContext.current
     val scope = rememberCoroutineScope()
     var busy by remember { mutableStateOf(false) }
-    var lock by remember { mutableStateOf(prefs.lockLandscape) }
+    var rot by remember { mutableStateOf(prefs.rotationMode) }
     var option by remember { mutableStateOf(prefs.fullscreenOption) }
     var autoNew by remember { mutableStateOf(prefs.autoNewApps) }
     val apps = remember { ScreenTools.launcherApps(ctx) }
@@ -441,9 +441,23 @@ private fun FullscreenCard(prefs: Prefs) {
     }
 
     SectionCard(Icons.Rounded.Fullscreen, tr(R.string.fullscreen), anchor = "fullscreen") {
-        SwitchRow(tr(R.string.lock_landscape), tr(R.string.lock_landscape_desc), lock) {
-            lock = it; prefs.lockLandscape = it; run(if (it) tr(R.string.lock_landscape_on) else tr(R.string.lock_landscape_off)) { ScreenTools.lockLandscape(ctx, it) }
+        SubHeader(tr(R.string.rotation))
+        ConnectedChoice(options = listOf(ScreenTools.ROT_LANDSCAPE to tr(R.string.lock_landscape),
+            ScreenTools.ROT_AUTO to tr(R.string.rot_auto), ScreenTools.ROT_AUTO_FIX to tr(R.string.rot_auto_fix)), selected = rot) {
+            rot = it; prefs.rotationMode = it
+            val done = when (it) {
+                ScreenTools.ROT_AUTO -> tr(R.string.rot_auto_on)
+                ScreenTools.ROT_AUTO_FIX -> tr(R.string.rot_auto_fix_on)
+                else -> tr(R.string.lock_landscape_on)
+            }
+            run(done) { ScreenTools.setRotation(ctx, it) }
         }
+        Text(when (rot) {
+                ScreenTools.ROT_AUTO -> tr(R.string.rot_auto_desc)
+                ScreenTools.ROT_AUTO_FIX -> tr(R.string.rot_auto_fix_desc)
+                else -> tr(R.string.lock_landscape_desc)
+            },
+            style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         SwitchRow(tr(R.string.fs_option), tr(R.string.fs_option_desc), option) {
             option = it; prefs.fullscreenOption = it
             if (it) run(tr(R.string.fs_option_on)) { ScreenTools.enableFullscreenOption(ctx) }

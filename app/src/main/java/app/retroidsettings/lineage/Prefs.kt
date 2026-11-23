@@ -56,9 +56,14 @@ class Prefs(context: Context) {
         get() = p.getInt("gpu_pct", 80)
         set(v) = p.edit().putInt("gpu_pct", v).apply()
 
-    var lockLandscape: Boolean
-        get() = p.getBoolean("lock_landscape", true)
-        set(v) = p.edit().putBoolean("lock_landscape", v).apply()
+    /** Saved rotation: ScreenTools.ROT_LANDSCAPE, ROT_AUTO or ROT_AUTO_FIX (re-applied after boot). */
+    var rotationMode: Int
+        get() = when {
+            p.contains("rotation_mode") -> p.getInt("rotation_mode", ScreenTools.ROT_LANDSCAPE)
+            !p.getBoolean("lock_landscape", true) -> ScreenTools.ROT_AUTO_FIX   // older "auto" setting
+            else -> ScreenTools.ROT_LANDSCAPE
+        }
+        set(v) = p.edit().putInt("rotation_mode", v).remove("lock_landscape").apply()
     var fullscreenOption: Boolean
         get() = p.getBoolean("fullscreen_option", true)
         set(v) = p.edit().putBoolean("fullscreen_option", v).apply()

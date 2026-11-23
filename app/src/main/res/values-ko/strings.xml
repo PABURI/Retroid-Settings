@@ -73,7 +73,7 @@
     <string name="sleep_save_desc" formatted="false">CPU/GPU 50% · 팬 끄기</string>
     <string name="fullscreen">강제 전체 화면</string>
     <string name="lock_landscape">가로 고정</string>
-    <string name="lock_landscape_desc">앱의 화면 회전 요청 무시</string>
+    <string name="lock_landscape_desc">항상 가로 · 앱의 회전 요청 무시</string>
     <string name="lock_landscape_on">가로 고정 켜짐</string>
     <string name="lock_landscape_off">가로 고정 꺼짐</string>
     <string name="fs_option">시스템 \'전체 화면\' 옵션</string>
@@ -181,4 +181,10 @@
     <string name="rs_not_root">root 아님 (uid=%1$s)</string>
     <string name="rs_error">오류: %1$s</string>
     <string name="rs_pair_error">페어링 오류: %1$s</string>
+    <string name="rot_auto">자동 회전</string>
+    <string name="rot_auto_on">자동 회전 켜짐</string>
+    <string name="rot_auto_desc">시스템 기본 자동 회전</string>
+    <string name="rot_auto_fix">자동 회전(보정)</string>
+    <string name="rot_auto_fix_on">자동 회전(보정) 켜짐</string>
+    <string name="rot_auto_fix_desc">앱이 센서를 읽어 회전 · 시스템 자동 회전이 90° 어긋날 때 사용</string>
 </resources>

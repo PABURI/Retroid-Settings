@@ -73,7 +73,7 @@
     <string name="sleep_save_desc" formatted="false">CPU/GPU 50% · fan off</string>
     <string name="fullscreen">Forced full screen</string>
     <string name="lock_landscape">Lock landscape</string>
-    <string name="lock_landscape_desc">Ignore apps\' rotation requests</string>
+    <string name="lock_landscape_desc">Always landscape · ignores apps\' rotation requests</string>
     <string name="lock_landscape_on">Landscape lock on</string>
     <string name="lock_landscape_off">Landscape lock off</string>
     <string name="fs_option">System \"Full screen\" option</string>
@@ -181,4 +181,10 @@
     <string name="rs_not_root">Not root (uid=%1$s)</string>
     <string name="rs_error">Error: %1$s</string>
     <string name="rs_pair_error">Pairing error: %1$s</string>
+    <string name="rot_auto">Auto-rotate</string>
+    <string name="rot_auto_on">Auto-rotate on</string>
+    <string name="rot_auto_desc">The system\'s own auto-rotate</string>
+    <string name="rot_auto_fix">Auto-rotate (fix)</string>
+    <string name="rot_auto_fix_on">Auto-rotate (fix) on</string>
+    <string name="rot_auto_fix_desc">The app reads the sensor and rotates · for when the system auto-rotate is 90° off</string>
 </resources>

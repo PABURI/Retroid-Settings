@@ -56,6 +56,15 @@
                 android:value="Fan, CPU/GPU limit and display control loop" />
         </service>
 
+        <service
+            android:name=".RotationService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Auto-rotate corrected for the 90-degree sensor offset" />
+        </service>
+
         <!-- Quick Settings tiles -->
         <service
             android:name=".RefreshTile"

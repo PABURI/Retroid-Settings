@@ -103,20 +103,29 @@ class DensityTile : BaseTile() {
 
 /** Fixed rotations only (no sensor): the RP6 orientation sensor is off by 90 degrees on this build. */
 class RotationTile : BaseTile() {
-    private val names = mapOf(0 to tr(R.string.landscape), 1 to tr(R.string.portrait), 3 to tr(R.string.portrait_rev))
-    private fun current() = Settings.System.getInt(contentResolver, Settings.System.USER_ROTATION, 0)
+    private val cycle = listOf(ScreenTools.ROT_LANDSCAPE, ScreenTools.ROT_AUTO, ScreenTools.ROT_AUTO_FIX,
+        ScreenTools.ROT_PORTRAIT, ScreenTools.ROT_PORTRAIT_REV)
+    private val kept = setOf(ScreenTools.ROT_LANDSCAPE, ScreenTools.ROT_AUTO, ScreenTools.ROT_AUTO_FIX)
+    private fun names(m: Int) = when (m) {
+        ScreenTools.ROT_AUTO -> tr(R.string.rot_auto)
+        ScreenTools.ROT_AUTO_FIX -> tr(R.string.rot_auto_fix)
+        ScreenTools.ROT_PORTRAIT -> tr(R.string.portrait)
+        ScreenTools.ROT_PORTRAIT_REV -> tr(R.string.portrait_rev)
+        else -> tr(R.string.landscape)
+    }
+    private fun current(): Int = when {
+        RotationService.running -> ScreenTools.ROT_AUTO_FIX
+        Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 0) == 1 -> ScreenTools.ROT_AUTO
+        else -> Settings.System.getInt(contentResolver, Settings.System.USER_ROTATION, 0).let { if (it in cycle) it else 0 }
+    }
     override fun label() = tr(R.string.rotation)
-    override fun subtitle() = names[current()] ?: tr(R.string.landscape)
-    override fun active() = current() != 0
-    override fun onTap(): ((Context) -> Unit)? {
-        val next = when (current()) { 0 -> 1; 1 -> 3; else -> 0 }
-        return try {
-            Settings.System.putInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 0)
-            Settings.System.putInt(contentResolver, Settings.System.USER_ROTATION, next)
-            null
-        } catch (e: Exception) {
-            { Daemon.runRoot(it, "settings put system accelerometer_rotation 0; wm user-rotation lock $next") }
-        }
+    override fun subtitle() = names(current())
+    override fun active() = current() != ScreenTools.ROT_LANDSCAPE
+    override fun onTap(): (Context) -> Unit {
+        val next = cycle[(cycle.indexOf(current()) + 1) % cycle.size]
+        // Landscape and the two auto modes are kept (re-applied after boot); portrait is a one-off.
+        if (next in kept) prefs.rotationMode = next
+        return { Daemon.runRoot(it, ScreenTools.rotationCommand(next)) }
     }
 }
 
